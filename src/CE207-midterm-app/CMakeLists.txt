@@ -1,37 +1,27 @@
-# aka5g/CMakeLists.txt
+# app/CMakeLists.txt
 set(ROOT src)
-set(APPNAME calculatorapp)
+set(APPNAME CE207-midterm-app)
 
 message(STATUS "[${ROOT}/${APPNAME}] Module Processing...")
 
-# Collect files without having to explicitly list each header and source file
-file(GLOB APP_HEADERS
-  "${CMAKE_CURRENT_SOURCE_DIR}/header/*.h"
-  "${CMAKE_CURRENT_SOURCE_DIR}/header/*.hpp")
+# Uygulama kaynak dosyalarını tanımla
+file(GLOB APP_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/HelloApp.c")
 
-file(GLOB APP_SOURCES
-  "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
-  "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cc")
+# Dosyaları gruplandır
+source_group("Source Files" FILES ${APP_SOURCES})
 
-# Create named folders for the sources within the project
-source_group("header" FILES ${APP_HEADERS})
-source_group("src" FILES ${APP_SOURCES})
+# Uygulamayı yürütülebilir olarak tanımla
+add_executable(${APPNAME} ${APP_SOURCES})
 
-# Set Properties->General->Configuration Type to Dynamic Library (.dll/.so/.dylib)
-add_executable(${APPNAME} ${APP_HEADERS} ${APP_SOURCES}) # for dynamic library use SHARED
-
+# Include yolunu ayarla
 target_include_directories(${APPNAME} PUBLIC
-						   ${CMAKE_CURRENT_SOURCE_DIR}/../utility/header
-						   ${CMAKE_CURRENT_SOURCE_DIR}/../calculator/header
-						   ${CMAKE_CURRENT_SOURCE_DIR}/header)
+                           ${CMAKE_CURRENT_SOURCE_DIR}/../CE207-midterm-lib)
 
-# Add any dependencies or compile options specific to lock6g
-target_link_libraries(${APPNAME} PRIVATE calculator utility)
+# Uygulamanın kütüphaneyi kullanmasını sağla
+target_link_libraries(${APPNAME} PRIVATE CE207-midterm-lib)
 
+# Uygulamayı hedef klasörlere kur
 install(TARGETS ${APPNAME}
-        LIBRARY DESTINATION lib
-        ARCHIVE DESTINATION lib
         RUNTIME DESTINATION bin )
-		
-		
+
 message(STATUS "[${ROOT}/${APPNAME}] Added Executable target: ${APPNAME}")
